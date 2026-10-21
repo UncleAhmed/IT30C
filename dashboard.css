@@ -1,0 +1,61 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+.dashboard {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background-image: url("images/waniwani.jpg");
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+     background-color: #8d6e84;
+}
+
+.logout-form {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+}
+
+.logout-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background-color: #574e4f;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #201e1e;
+}
+
+@media (max-width: 600px) {
+    .logout-form {
+        bottom: 15px;
+        left: 15px;
+    }
+
+    .logout-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
