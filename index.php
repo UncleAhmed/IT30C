@@ -1,4 +1,79 @@
+<?php
+session_start();
+require_once "db.php";
 
+$message = "";
+$messageType = "";
+
+if (isset($_SESSION["userid"])) {
+    // Redirect already logged-in users based on role
+    if ($_SESSION["role"] === "admin") {
+        header("Location: admin_dashboard.php");
+    } else {
+        header("Location: student_dashboard.php");
+    }
+    exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["submit"])) {
+    $username = trim($_POST["user"] ?? "");
+    $password = $_POST["pass"] ?? "";
+
+    if ($username === "" || $password === "") {
+        $message = "Please enter your username and password.";
+        $messageType = "error";
+    } else {
+        // Include 'role' in the SELECT query
+        $stmt = $conn->prepare(
+            "SELECT userid, username, password, fname, lname, role
+             FROM users
+             WHERE username = ?
+             LIMIT 1"
+        );
+
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows === 1) {
+            $stmt->bind_result(
+                $userid,
+                $dbUsername,
+                $hashedPassword,
+                $fname,
+                $lname,
+                $role
+            );
+
+            $stmt->fetch();
+
+            if (password_verify($password, $hashedPassword)) {
+                session_regenerate_id(true);
+
+                // Store user details and role in session
+                $_SESSION["userid"] = $userid;
+                $_SESSION["username"] = $dbUsername;
+                $_SESSION["fname"] = $fname;
+                $_SESSION["lname"] = $lname;
+                $_SESSION["role"] = $role;
+
+                // Redirect based on role
+                if ($role === "admin") {
+                    header("Location: admin_dashboard.php");
+                } else {
+                    header("Location: student_dashboard.php");
+                }
+                exit;
+            }
+        }
+
+        $message = "Invalid username or password.";
+        $messageType = "error";
+
+        $stmt->close();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
