@@ -52,20 +52,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             );
 
            
-            $stmt = $conn->prepare(
-                "INSERT INTO users
-                    (username, password, fname, lname, mname)
-                 VALUES (?, ?, ?, ?, ?)"
-            );
+         $stmt = $conn->prepare(
+    "INSERT INTO users
+        (username, password, fname, lname, mname, role)
+     VALUES (?, ?, ?, ?, ?, 'student')"
+);
 
-            $stmt->bind_param(
-                "sssss",
-                $username,
-                $hashedPassword,
-                $fname,
-                $lname,
-                $mname
-            );
+$stmt->bind_param(
+    "sssss",
+    $username,
+    $hashedPassword,
+    $fname,
+    $lname,
+    $mname
+);
 
             if ($stmt->execute()) {
                 $message = "Account created! You can now log in.";
